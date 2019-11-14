@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">animals</string>
+    <string name="title_activity_main">animals</string>
+    <string name="package_name">fr.m2i.aef.animals</string>
+    <string name="custom_url_scheme">fr.m2i.aef.animals</string>
+</resources>

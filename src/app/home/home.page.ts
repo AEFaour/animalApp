@@ -102,11 +102,12 @@ export class HomePage {
   }
   guessAnimal(pos) {
     let message = "";
+    let animal = this.animals[pos];
     if (this.currentAnimalIndex == null) {
       message = "Il faut d'abord jouer avant de choisir un animal";
 
     } else if (this.currentAnimalIndex == pos) {
-      let animal = this.animals[pos];
+      
       message = `Bien joué c'est bien le jouer ${animal.title} qui ${animal.desc}`;
       this.currentAnimalIndex = null;
       this.media = null;
@@ -128,8 +129,17 @@ export class HomePage {
   }
   reorderAnimal(even){
     let animal = this.animals[even.detail.from];
+    let animalToGuess = this.animals[this.currentAnimalIndex];
     this.animals.splice(even.detail.from, 1);
     this.animals.splice(even.detail.to, 0, animal);
+
+    this.currentAnimalIndex = this.animals.findIndex(
+      (item)=>{ return item.title == animalToGuess.title }
+    );
+
+    /*if(this.currentAnimalIndex == even.detail.from){
+      this.currentAnimalIndex = even.detail.to;
+    }*/
 
     even.detail.complete();
   }
