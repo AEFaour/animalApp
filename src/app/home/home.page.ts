@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -72,16 +73,27 @@ export class HomePage {
     }
   ];
 
-  constructor() { }
+  constructor(private toastCtrl: ToastController) { }
+  /*async presentToast(){
+    const toast = await this.toastCtrl.create({
+      message:"",
+      duration : 2000
+    })
+  }*/
 
   private media = null;
   private currentAnimalIndex: number = null;
+  reorderDisabled: boolean = true; 
+  
 
   playSound() {
-    this.currentAnimalIndex = Math.floor(Math.random() * this.animals.length);
+    if(this.currentAnimalIndex == null){
+      this.currentAnimalIndex = Math.floor(Math.random() * this.animals.length);
+    }
+    
     let animal = this.animals[this.currentAnimalIndex];
 
-
+    
     console.log(animal);
 
     this.media = new Audio('/assets' + animal.file);
@@ -92,12 +104,33 @@ export class HomePage {
     let message = "";
     if (this.currentAnimalIndex == null) {
       message = "Il faut d'abord jouer avant de choisir un animal";
+
     } else if (this.currentAnimalIndex == pos) {
       let animal = this.animals[pos];
-      message = `Bien joué c'est bien le jouer ${animal.title} qui ${animal.desc}`
+      message = `Bien joué c'est bien le jouer ${animal.title} qui ${animal.desc}`;
+      this.currentAnimalIndex = null;
+      this.media = null;
     } else {
       message = "ce n'est pas ça, essaie encore";
     }
-    console.log(message)
+    console.log(message);
+    this.showToast(message)
+  }
+
+  private async showToast(text) {
+    /*const toast = await */this.toastCtrl.create({
+    header: 'Message : ',
+    message: text,
+    duration: 2000,
+    position: 'top'
+  }).then((toast) => { toast.present() })
+    /*toast.present();*/
+  }
+  reorderAnimal(even){
+    let animal = this.animals[even.detail.from];
+    this.animals.splice(even.detail.from, 1);
+    this.animals.splice(even.detail.to, 0, animal);
+
+    even.detail.complete();
   }
 }

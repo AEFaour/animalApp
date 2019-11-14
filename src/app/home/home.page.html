@@ -1,24 +1,34 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            This is my favorite Animal
+            My favorite Animal
         </ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="reorderDisabled = ! reorderDisabled" [color]="reorderDisabled?'warning':'success'">
+                <ion-icon name="reorder"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-list>
-        <ion-item *ngFor="let animal of animals; let pos=index" (click)="guessAnimal(pos)">
-            <ion-label>{{ animal.title }}</ion-label>
-            <ion-avatar slot="start">
-                <ion-img src="/assets/{{animal.image}}"> </ion-img>
-                <audio src="/assets/{{ animal.file }}"></audio>
-            </ion-avatar>
-        </ion-item>
+        <ion-reorder-group [disabled]="reorderDisabled" (ionItemReorder)="reorderAnimal($event)">
+            <ion-item *ngFor="let animal of animals; let pos=index" (click)="guessAnimal(pos)">
+                <ion-label>{{ animal.title }}</ion-label>
+                <ion-avatar slot="start">
+                    <ion-img src="/assets/{{animal.image}}"></ion-img>
+                    <audio src="/assets/{{ animal.file }}"></audio>
+                </ion-avatar>
+                <ion-reorder slot="end">
+                    <ion-icon name="musical-notes"></ion-icon>
+                </ion-reorder>
+            </ion-item>
+        </ion-reorder-group>
     </ion-list>
 </ion-content>
 <ion-footer>
     <ion-toolbar>
-        <ion-button expand="full" size="big" class="gros-bouton" (click)="playSound()">play!</ion-button>
+        <ion-button expand="full" size="big" class="gros-bouton" (click)="playSound()" [color]="currentAnimalIndex?'success':'danger'">play!</ion-button>
     </ion-toolbar>
 </ion-footer>
