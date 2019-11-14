@@ -1,14 +1,24 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>
+            This is my favorite Animal
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+    <ion-list>
+        <ion-item *ngFor="let animal of animals; let pos=index" (click)="guessAnimal(pos)">
+            <ion-label>{{ animal.title }}</ion-label>
+            <ion-avatar slot="start">
+                <ion-img src="/assets/{{animal.image}}"> </ion-img>
+                <audio src="/assets/{{ animal.file }}"></audio>
+            </ion-avatar>
+        </ion-item>
+    </ion-list>
 </ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-button expand="full" size="big" class="gros-bouton" (click)="playSound()">play!</ion-button>
+    </ion-toolbar>
+</ion-footer>
