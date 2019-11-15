@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+
   animals = [
     {
       'title': 'Vache',
@@ -73,74 +75,76 @@ export class HomePage {
     }
   ];
 
-  constructor(private toastCtrl: ToastController) { }
-  /*async presentToast(){
-    const toast = await this.toastCtrl.create({
-      message:"",
-      duration : 2000
-    })
-  }*/
+  constructor(private toastCtrl: ToastController) {}
 
   private media = null;
-  private currentAnimalIndex: number = null;
-  reorderDisabled: boolean = true; 
-  
+  private currentAnimalIndex:number = null;
 
-  playSound() {
+  reorderDisabled: boolean = true;
+
+  playSound(){
+
+    //Choisir un animal au hasard si aucun n'a été déjà choisi
     if(this.currentAnimalIndex == null){
       this.currentAnimalIndex = Math.floor(Math.random() * this.animals.length);
     }
-    
+   
     let animal = this.animals[this.currentAnimalIndex];
 
-    
-    console.log(animal);
-
+    //Instanciation de l'objet Audio
     this.media = new Audio('/assets' + animal.file);
+    //Chargement du son
     this.media.load();
+    //lecture du son
     this.media.play();
-  }
-  guessAnimal(pos) {
-    let message = "";
-    let animal = this.animals[pos];
-    if (this.currentAnimalIndex == null) {
-      message = "Il faut d'abord jouer avant de choisir un animal";
 
-    } else if (this.currentAnimalIndex == pos) {
-      
-      message = `Bien joué c'est bien le jouer ${animal.title} qui ${animal.desc}`;
+  }
+
+  guessAnimal(pos){
+    let message = "";
+    if(this.currentAnimalIndex == null){
+      message = "Il faut d'abord jouer avant de choisir un animal";
+    } else if (this.currentAnimalIndex == pos){
+      let animal = this.animals[pos];
+      message = `Bien joué c'est bien le ${animal.title} qui ${animal.desc}`;
+
+      //Réinitialisation du jeu
       this.currentAnimalIndex = null;
       this.media = null;
+      
     } else {
-      message = "ce n'est pas ça, essaie encore";
+      message = "Ce n'est pas ça essaie encore";
     }
-    console.log(message);
-    this.showToast(message)
+
+    this.showToast(message);
   }
 
-  private async showToast(text) {
-    /*const toast = await */this.toastCtrl.create({
-    header: 'Message : ',
-    message: text,
-    duration: 2000,
-    position: 'top'
-  }).then((toast) => { toast.present() })
-    /*toast.present();*/
+  private showToast(text){
+    this.toastCtrl.create({
+      message: text,
+      duration: 1000,
+      position: 'middle'
+    }).then( (toast) =>{ toast.present()});
   }
+
   reorderAnimal(even){
     let animal = this.animals[even.detail.from];
+
+    //Sauvegarde de l'animal en cours que je tente de trouver
     let animalToGuess = this.animals[this.currentAnimalIndex];
+
+    //Suppression à la position de départ
     this.animals.splice(even.detail.from, 1);
+    //Insertion à la position d'arrivée
     this.animals.splice(even.detail.to, 0, animal);
 
+    //Redéfinition de l'index de l'animal à trouver
     this.currentAnimalIndex = this.animals.findIndex(
       (item)=>{ return item.title == animalToGuess.title }
     );
 
-    /*if(this.currentAnimalIndex == even.detail.from){
-      this.currentAnimalIndex = even.detail.to;
-    }*/
-
-    even.detail.complete();
+    //Finalisation le réagencement
+    even.detail.complete(); 
   }
+
 }
